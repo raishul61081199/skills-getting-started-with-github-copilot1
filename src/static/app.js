@@ -7,8 +7,27 @@ document.addEventListener("DOMContentLoaded", () => {
   // Function to fetch activities from API
   async function fetchActivities() {
     try {
-      const response = await fetch("/activities");
-      const activities = await response.json();
+      // Mock data for demonstration
+      const activities = {
+        "Soccer Club": {
+          description: "Join the school's soccer team for fun and fitness.",
+          schedule: "Mondays and Wednesdays, 4-6 PM",
+          max_participants: 20,
+          participant: ["alice@mergington.edu", "bob@mergington.edu"]
+        },
+        "Chess Club": {
+          description: "Improve your chess skills and compete in tournaments.",
+          schedule: "Tuesdays, 3-5 PM",
+          max_participants: 15,
+          participant: []
+        },
+        "Drama Club": {
+          description: "Express yourself through acting and theater.",
+          schedule: "Thursdays, 5-7 PM",
+          max_participants: 25,
+          participant: ["charlie@mergington.edu"]
+        }
+      };
 
       // Clear loading message
       activitiesList.innerHTML = "";
@@ -18,14 +37,14 @@ document.addEventListener("DOMContentLoaded", () => {
         const activityCard = document.createElement("div");
         activityCard.className = "activity-card";
 
-        const spotsLeft = details.max_participants - details.participants.length;
+        const spotsLeft = details.max_participants - details.participant.length;
 
         activityCard.innerHTML = `
           <h4>${name}</h4>
           <p>${details.description}</p>
           <p><strong>Schedule:</strong> ${details.schedule}</p>
           <p><strong>Availability:</strong> ${spotsLeft} spots left</p>
-          ${details.participants.length > 0 ? `<p><strong>Participants:</strong></p><ul>${details.participants.map(p => `<li>${p}</li>`).join('')}</ul>` : ''}
+          ${details.participant.length > 0 ? `<p><strong>Participant:</strong></p><ul>${details.participant.map(p => `<li>${p}</li>`).join('')}</ul>` : ''}
         `;
 
         activitiesList.appendChild(activityCard);

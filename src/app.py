@@ -21,6 +21,42 @@ app.mount("/static", StaticFiles(directory=os.path.join(Path(__file__).parent,
 
 # In-memory activity database
 activities = {
+    "Tennis Club": {
+        "description": "Learn tennis techniques and compete in matches",
+        "schedule": "Tuesdays and Thursdays, 4:00 PM - 5:30 PM",
+        "max_participants": 16,
+        "participants": []
+        },
+        "Volleyball Team": {
+        "description": "Join the volleyball team for training and competitions",
+        "schedule": "Mondays and Wednesdays, 5:00 PM - 6:30 PM",
+        "max_participants": 14,
+        "participants": []
+        },
+        "Music Band": {
+        "description": "Learn to play instruments and perform in concerts",
+        "schedule": "Wednesdays and Fridays, 4:00 PM - 5:30 PM",
+        "max_participants": 25,
+        "participants": []
+        },
+        "Photography Club": {
+        "description": "Develop photography skills and showcase your work",
+        "schedule": "Saturdays, 10:00 AM - 12:00 PM",
+        "max_participants": 15,
+        "participants": []
+        },
+        "Science Club": {
+        "description": "Conduct experiments and explore scientific concepts",
+        "schedule": "Thursdays, 3:30 PM - 5:00 PM",
+        "max_participants": 18,
+        "participants": []
+        },
+        "Robotics Club": {
+        "description": "Build and program robots for competitions",
+        "schedule": "Tuesdays, 4:00 PM - 6:00 PM",
+        "max_participants": 20,
+        "participants": []
+        },
     "Basketball Team": {
         "description": "Join the basketball team and compete in local tournaments",
         "schedule": "Mondays and Wednesdays, 4:00 PM - 6:00 PM",
