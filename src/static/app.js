@@ -7,27 +7,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // Function to fetch activities from API
   async function fetchActivities() {
     try {
-      // Mock data for demonstration
-      const activities = {
-        "Soccer Club": {
-          description: "Join the school's soccer team for fun and fitness.",
-          schedule: "Mondays and Wednesdays, 4-6 PM",
-          max_participants: 20,
-          participant: ["alice@mergington.edu", "bob@mergington.edu"]
-        },
-        "Chess Club": {
-          description: "Improve your chess skills and compete in tournaments.",
-          schedule: "Tuesdays, 3-5 PM",
-          max_participants: 15,
-          participant: []
-        },
-        "Drama Club": {
-          description: "Express yourself through acting and theater.",
-          schedule: "Thursdays, 5-7 PM",
-          max_participants: 25,
-          participant: ["charlie@mergington.edu"]
-        }
-      };
+      const response = await fetch('/activities');
+      const activities = await response.json();
 
       // Clear loading message
       activitiesList.innerHTML = "";
@@ -37,14 +18,14 @@ document.addEventListener("DOMContentLoaded", () => {
         const activityCard = document.createElement("div");
         activityCard.className = "activity-card";
 
-        const spotsLeft = details.max_participants - details.participant.length;
+        const spotsLeft = details.max_participants - details.participants.length;
 
         activityCard.innerHTML = `
           <h4>${name}</h4>
           <p>${details.description}</p>
           <p><strong>Schedule:</strong> ${details.schedule}</p>
           <p><strong>Availability:</strong> ${spotsLeft} spots left</p>
-          ${details.participant.length > 0 ? `<p><strong>Participant:</strong></p><ul>${details.participant.map(p => `<li>${p}</li>`).join('')}</ul>` : ''}
+          ${details.participants.length > 0 ? `<p><strong>Participants:</strong></p><ul>${details.participants.map(p => `<li>${p} <span class="delete-icon" data-activity="${name}" data-email="${p}">×</span></li>`).join('')}</ul>` : ''}
         `;
 
         activitiesList.appendChild(activityCard);
@@ -54,6 +35,37 @@ document.addEventListener("DOMContentLoaded", () => {
         option.value = name;
         option.textContent = name;
         activitySelect.appendChild(option);
+      });
+
+      // Add event listeners for delete icons
+      document.querySelectorAll('.delete-icon').forEach(icon => {
+        icon.addEventListener('click', async (event) => {
+          const activity = event.target.dataset.activity;
+          const email = event.target.dataset.email;
+          try {
+            const response = await fetch(`/activities/${encodeURIComponent(activity)}/unregister?email=${encodeURIComponent(email)}`, {
+              method: 'DELETE'
+            });
+            const result = await response.json();
+            if (response.ok) {
+              messageDiv.textContent = result.message;
+              messageDiv.className = "success";
+              fetchActivities(); // Refresh the list
+            } else {
+              messageDiv.textContent = result.detail || "An error occurred";
+              messageDiv.className = "error";
+            }
+            messageDiv.classList.remove("hidden");
+            setTimeout(() => {
+              messageDiv.classList.add("hidden");
+            }, 5000);
+          } catch (error) {
+            messageDiv.textContent = "Failed to unregister. Please try again.";
+            messageDiv.className = "error";
+            messageDiv.classList.remove("hidden");
+            console.error("Error unregistering:", error);
+          }
+        });
       });
     } catch (error) {
       activitiesList.innerHTML = "<p>Failed to load activities. Please try again later.</p>";
@@ -82,6 +94,7 @@ document.addEventListener("DOMContentLoaded", () => {
         messageDiv.textContent = result.message;
         messageDiv.className = "success";
         signupForm.reset();
+        fetchActivities(); // Refresh the list
       } else {
         messageDiv.textContent = result.detail || "An error occurred";
         messageDiv.className = "error";
